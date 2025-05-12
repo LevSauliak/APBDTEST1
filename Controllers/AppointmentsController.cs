@@ -1,4 +1,6 @@
 using apbdtest1.Exceptions;
+using apbdtest1.Models;
+using apbdtest1.Models.DTOs;
 using apbdtest1.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +34,21 @@ namespace apbdtest1.Controllers
             {
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAppointment([FromBody] AppointmentDTO appointment)
+        {
+            try
+            {
+                await _appointmentService.AddAppointment(appointment);
+            }
+            catch (AppointmentExistsException e)
+            {
+                return BadRequest("Appointment with this id already exists");
+            }
+
+            return Ok();
         }
     }
 }
