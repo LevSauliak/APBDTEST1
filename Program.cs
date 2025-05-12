@@ -1,16 +1,28 @@
+
+using apbdtest1.Repositories;
+using apbdtest1.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Add services to the container.
+
+builder.Services.AddControllers();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IDbRepository, DbRepository>();
+
+
+// builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.MapOpenApi();
 }
 
-// app.UseHttpsRedirection();
+app.UseAuthorization();
+
+app.MapControllers();
+
 app.Run();
